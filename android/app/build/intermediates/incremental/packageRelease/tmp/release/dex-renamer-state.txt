@@ -1,0 +1,4 @@
+#Sat Sep 06 01:16:03 GMT+07:00 2025
+base.0=/Users/lamini/Development/Projects/flutter_stateful/android/app/build/intermediates/dex/release/minifyReleaseWithR8/classes.dex
+path.0=classes.dex
+renamed.0=classes.dex

@@ -11,6 +11,7 @@ class CounterPageTwo extends StatefulWidget {
 class _CounterPageTwoState extends State<CounterPageTwo> {
   int counter = 0;
 
+  // ignore: unused_element
   void _increaseCounter() {
     setState(() {
       counter++;
@@ -24,9 +25,9 @@ class _CounterPageTwoState extends State<CounterPageTwo> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CounterButton(onPressed: _increaseCounter),
+          // CounterButton(onPressed: _increaseCounter),
           const SizedBox(height: 20),
-          CounterText(),
+          // CounterText(),
         ],
       ),
     );

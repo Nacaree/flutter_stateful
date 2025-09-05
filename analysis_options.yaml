@@ -1,5 +1,7 @@
 include: package:flutter_lints/flutter.yaml
 analyzer:
   errors:
+    deprecated_member_use: ignore
     file_names: ignore
     unused_import: ignore
+    use_key_in_widget_constructors: ignore
