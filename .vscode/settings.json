@@ -1,4 +1,5 @@
 {
   "cSpell.words": ["allprojects", "ptgtuygage", "Subproject", "subprojects"],
-  "java.configuration.updateBuildConfiguration": "interactive"
+  "java.configuration.updateBuildConfiguration": "interactive",
+  "cmake.ignoreCMakeListsMissing": true
 }
