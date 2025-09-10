@@ -4,6 +4,7 @@ import 'package:learn_stateful/ColorPicker.dart';
 import 'package:learn_stateful/Quiz/HomePageV1.dart';
 import 'package:learn_stateful/Quiz/HomePageV2.dart';
 import 'package:learn_stateful/Quiz2/HomePage.dart';
+import 'package:learn_stateful/ReadWriteData/article_page.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -15,7 +16,7 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: Scaffold(body: Homepage()));
+    return MaterialApp(home: Scaffold(body: ArticlePage()));
     // return MaterialApp(home: Scaffold(body: HomePageV2()));
 
     /*
