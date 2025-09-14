@@ -7,13 +7,24 @@ class Product {
   double? price;
   String? description;
   String? createdAt;
-  Product({
-    this.pid,
-    this.name,
-    this.price,
-    this.description,
-    this.createdAt,
-  });
+  Product({this.pid, this.name, this.price, this.description, this.createdAt});
+
+  Map<String, dynamic> toCreateMap() => {
+    "name": name,
+    "price": price,
+    "description": description,
+  };
+  Map<String, dynamic> toUpdateMap() {
+    return {
+      "pid": pid,
+      "name": name,
+      "price": price,
+      "description": description,
+    };
+  }
+
+  factory Product.fromJson(String source) =>
+      Product.fromMap(json.decode(source) as Map<String, dynamic>);
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -30,17 +41,12 @@ class Product {
       pid: map['pid'] != null ? map['pid'] as int : null,
       name: map['name'] != null ? map['name'] as String : null,
       price: map['price'] != null ? map['price'] as double : null,
-      description: map['description'] != null ? map['description'] as String : null,
+      description: map['description'] != null
+          ? map['description'] as String
+          : null,
       createdAt: map['createdAt'] != null ? map['createdAt'] as String : null,
     );
   }
 
   String toJson() => json.encode(toMap());
-
-  factory Product.fromJson(String source) => Product.fromMap(json.decode(source) as Map<String, dynamic>);
-
-  @override
-  String toString() {
-    return 'Product(pid: $pid, name: $name, price: $price, description: $description, createdAt: $createdAt)';
-  }
 }

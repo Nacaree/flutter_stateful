@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:learn_stateful/Homework07/AddProductPage.dart';
 
 class ProductPage extends StatefulWidget {
   const ProductPage({super.key});
@@ -19,6 +20,23 @@ class _ProductPageState extends State<ProductPage> {
         backgroundColor: Color.fromARGB(255, 8, 113, 199),
       ),
       body: _productBuilder(),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Color.fromARGB(255, 8, 113, 199),
+        foregroundColor: Colors.white,
+        splashColor: Colors.red,
+        shape: CircleBorder(),
+        onPressed: () async {
+          final added = await Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => AddProductPage()),
+          );
+          if (added == true) {
+            // _refreshArticles();
+          }
+        },
+        tooltip: 'Add Article',
+        child: const Icon(Icons.add),
+      ),
     );
   }
 }
