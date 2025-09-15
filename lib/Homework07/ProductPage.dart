@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:learn_stateful/Homework07/AddProductPage.dart';
+import 'package:learn_stateful/Homework07/Product.dart';
+import 'package:learn_stateful/Homework07/ProductService.dart';
 
 class ProductPage extends StatefulWidget {
   const ProductPage({super.key});
@@ -9,6 +11,19 @@ class ProductPage extends StatefulWidget {
 }
 
 class _ProductPageState extends State<ProductPage> {
+  late Future<List<Product>> products;
+  @override
+  void initState() {
+    super.initState();
+    products = getProducts();
+  }
+
+  void _refreshProducts() {
+    setState(() {
+      products = getProducts();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,26 +34,84 @@ class _ProductPageState extends State<ProductPage> {
         ),
         backgroundColor: Color.fromARGB(255, 8, 113, 199),
       ),
-      body: _productBuilder(),
+      body: FutureBuilder<List<Product>>(
+        future: products,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(child: Text('No products found'));
+          } else {
+            return _productBuilder(snapshot.data!);
+          }
+        },
+      ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Color.fromARGB(255, 8, 113, 199),
+        backgroundColor: const Color.fromARGB(255, 8, 113, 199),
         foregroundColor: Colors.white,
         splashColor: Colors.red,
-        shape: CircleBorder(),
+        shape: const CircleBorder(),
         onPressed: () async {
           final added = await Navigator.push(
             context,
-            MaterialPageRoute(builder: (_) => AddProductPage()),
+            MaterialPageRoute(builder: (_) => const AddProductPage()),
           );
           if (added == true) {
-            // _refreshArticles();
+            _refreshProducts();
           }
         },
-        tooltip: 'Add Article',
+        tooltip: 'Add Product',
         child: const Icon(Icons.add),
       ),
     );
   }
+}
+
+// * Better way of doing it
+Widget _productBuilder(List<Product> products) {
+  return GridView.builder(
+    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+      crossAxisCount: 1,
+      mainAxisSpacing: 16,
+      crossAxisSpacing: 16,
+      childAspectRatio: 0.95, // * change size of the box
+    ),
+    itemCount: products.length,
+    padding: const EdgeInsets.all(16),
+    itemBuilder: (BuildContext context, int index) {
+      final product = products[index];
+      return Card(
+        elevation: 5, // shadow
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            children: [
+              Container(
+                child: Expanded(
+                  // color: Colors.amber,
+                  child: Image.network(
+                    // 'https://docs.flutter.dev/assets/images/dash/dash-fainting.gif',
+                    "https://images.ctfassets.net/yadj1kx9rmg0/wtrHxeu3zEoEce2MokCSi/cf6f68efdcf625fdc060607df0f3baef/quwowooybuqbl6ntboz3.jpg",
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(product.name ?? ""),
+                  Text("Price: ${product.price}"),
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
 }
 
 // Widget _productBuilder() {
@@ -81,35 +154,3 @@ class _ProductPageState extends State<ProductPage> {
 //     },
 //   );
 // }
-// * Better way of making card
-Widget _productBuilder() {
-  return GridView.builder(
-    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-      crossAxisCount: 1,
-      mainAxisSpacing: 16,
-      crossAxisSpacing: 16,
-      childAspectRatio: 0.95, // * change size of the box
-    ),
-    itemCount: 5,
-    padding: EdgeInsets.all(16),
-    itemBuilder: (BuildContext context, int index) {
-      return Card(
-        elevation: 5, // shadow
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Column(
-            children: [
-              Expanded(child: Container(color: Colors.amber)),
-              const SizedBox(height: 16),
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [Text("Product Name"), Text("Price: 20")],
-              ),
-            ],
-          ),
-        ),
-      );
-    },
-  );
-}
