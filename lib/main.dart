@@ -17,7 +17,7 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: Scaffold(body: ProductPage()));
+    return MaterialApp(home: Scaffold(body: CounterPage()));
     // return MaterialApp(home: Scaffold(body: HomePageV2()));
 
     /*
