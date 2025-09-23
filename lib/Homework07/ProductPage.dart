@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:learn_stateful/Homework07/AddProductPage.dart';
 import 'package:learn_stateful/Homework07/Product.dart';
+import 'package:learn_stateful/Homework07/ProductDetailPage.dart';
 import 'package:learn_stateful/Homework07/ProductService.dart';
 
 class ProductPage extends StatefulWidget {
@@ -67,51 +68,66 @@ class _ProductPageState extends State<ProductPage> {
       ),
     );
   }
-}
 
-// * Better way of doing it
-Widget _productBuilder(List<Product> products) {
-  return GridView.builder(
-    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-      crossAxisCount: 1,
-      mainAxisSpacing: 16,
-      crossAxisSpacing: 16,
-      childAspectRatio: 0.95, // * change size of the box
-    ),
-    itemCount: products.length,
-    padding: const EdgeInsets.all(16),
-    itemBuilder: (BuildContext context, int index) {
-      final product = products[index];
-      return Card(
-        elevation: 5, // shadow
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Column(
-            children: [
-              Container(
-                child: Expanded(
-                  // color: Colors.amber,
-                  child: Image.network(
-                    // 'https://docs.flutter.dev/assets/images/dash/dash-fainting.gif',
-                    "https://images.ctfassets.net/yadj1kx9rmg0/wtrHxeu3zEoEce2MokCSi/cf6f68efdcf625fdc060607df0f3baef/quwowooybuqbl6ntboz3.jpg",
-                  ),
-                ),
+  // * Better way of doing it
+  Widget _productBuilder(List<Product> products) {
+    return GridView.builder(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 1,
+        mainAxisSpacing: 16,
+        crossAxisSpacing: 16,
+        childAspectRatio: 0.95, // * change size of the box
+      ),
+      itemCount: products.length,
+      padding: const EdgeInsets.all(16),
+      itemBuilder: (BuildContext context, int index) {
+        final product = products[index];
+        return InkWell(
+          onTap: () async {
+            final updated = await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ProductDetailPage(product: product),
               ),
-              const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            );
+            if (updated == true) {
+              _refreshProducts();
+            }
+          },
+          child: Card(
+            elevation: 5, // shadow
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
                 children: [
-                  Text(product.name ?? ""),
-                  Text("Price: ${product.price}"),
+                  Container(
+                    child: Expanded(
+                      // color: Colors.amber,
+                      child: Image.network(
+                        // 'https://docs.flutter.dev/assets/images/dash/dash-fainting.gif',
+                        "https://i.pinimg.com/originals/08/43/13/0843134f41cc7e423d9d3a08edb7afd0.jpg?nii=t",
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(product.name ?? ""),
+                      Text("Price: ${product.price}"),
+                    ],
+                  ),
                 ],
               ),
-            ],
+            ),
           ),
-        ),
-      );
-    },
-  );
+        );
+      },
+    );
+  }
 }
 
 // Widget _productBuilder() {

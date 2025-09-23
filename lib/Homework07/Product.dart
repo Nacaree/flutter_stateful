@@ -40,7 +40,9 @@ class Product {
     return Product(
       pid: map['pid'] != null ? map['pid'] as int : null,
       name: map['name'] != null ? map['name'] as String : null,
-      price: map['price'] != null ? (map['price'] as num).toDouble() : null,
+      price: map['price'] != null
+          ? double.tryParse(map['price'].toString())
+          : null,
       description: map['description'] != null
           ? map['description'] as String
           : null,
