@@ -20,6 +20,8 @@ dependency_overrides:
   material_color_utilities: ^0.13.0
   meta: ^1.17.0
   test_api: ^0.7.7
+  shared_preferences_android: ^2.4.13
+  js: ^0.7.2
 
 dev_dependencies:
   flutter_test:
