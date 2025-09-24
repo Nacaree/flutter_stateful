@@ -23,15 +23,35 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _loadUsername() async {
     // * fake delay
-    await Future.delayed(const Duration(seconds: 1));
+    try {
+      await Future.delayed(const Duration(seconds: 1));
+      final username = await _accountService.readUser();
+      final usernameToken = await _accountService.readToken();
+      setState(() {
+        _username = username;
+        _token = usernameToken;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      debugPrint("can't load user: $e");
+    }
+  }
 
-    final username = await _accountService.readUser();
-    final usernameToken = await _accountService.readToken();
-    setState(() {
-      _username = username;
-      _token = usernameToken;
-      _isLoading = false;
-    });
+  Future<void> _logout(BuildContext context) async {
+    try {
+      await _accountService.logout();
+      if (context.mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const LoginPage()),
+        );
+      }
+    } catch (e) {
+      debugPrint("logout failed, $e");
+    }
   }
 
   @override
@@ -43,11 +63,7 @@ class _HomePageState extends State<HomePage> {
         actions: [
           TextButton(
             onPressed: () async {
-              await _accountService.logout();
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const LoginPage()),
-              );
+              await _logout(context);
             },
             child: Icon(
               Icons.logout_sharp,

@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'accountService.dart';
 import 'package:flutter/material.dart';
 import 'package:learn_stateful/Helper/HomePage.dart';
@@ -10,11 +11,11 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  static bool _isPasswordVisible = false;
+  bool _isPasswordVisible = false;
   final AccountService _accountService = AccountService();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  String? _userToken;
+
   @override
   void initState() {
     super.initState();
@@ -23,44 +24,52 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> _checkIfLoggedIn() async {
     final token = await _accountService.readToken();
-    if (token != null) {
-      setState(() {
-        _userToken = token;
-        Navigator.pushReplacement(
-          context,
-          PageRouteBuilder(
-            pageBuilder: (context, animation1, animation2) => const HomePage(),
-            transitionDuration: Duration.zero,
-            reverseTransitionDuration: Duration.zero,
-          ),
-        );
-      });
+    if (token != null && mounted) {
+      Navigator.pushReplacement(
+        context,
+        PageRouteBuilder(
+          pageBuilder: (context, animation1, animation2) => const HomePage(),
+          transitionDuration: Duration.zero,
+          reverseTransitionDuration: Duration.zero,
+        ),
+      );
     }
   }
 
   Future<void> _saveUser() async {
     if (_usernameController.text.isEmpty || _passwordController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter both email and password.')),
+        SnackBar(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          showCloseIcon: true,
+          elevation: 1.5,
+          content: Text("Please enter both password & username"),
+          backgroundColor: Colors.red[600],
+          behavior: SnackBarBehavior.floating,
+          duration: const Duration(seconds: 4),
+        ),
       );
       return; // Stop execution if fields are empty
     }
 
-    await _accountService.saveUser(_usernameController.text);
-    await _accountService.saveToken("User${_usernameController.text}001");
-    _checkIfLoggedIn(); // This will update _userToken if successful
+    try {
+      await _accountService.saveUser(_usernameController.text);
+      await _accountService.saveToken("User${_usernameController.text}001");
 
-    Navigator.pushReplacement(
-      context,
-      PageRouteBuilder(
-        pageBuilder: (context, animation1, animation2) => const HomePage(),
-        transitionDuration: Duration.zero,
-        reverseTransitionDuration: Duration.zero,
-      ),
-    );
+      _usernameController.clear();
+      _passwordController.clear(); // Clear password field as well
 
-    _usernameController.clear();
-    _passwordController.clear(); // Clear password field as well
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const HomePage()),
+        );
+      }
+    } on Exception catch (e) {
+      debugPrint('Login error: $e');
+    }
   }
 
   @override

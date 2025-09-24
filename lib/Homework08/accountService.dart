@@ -5,8 +5,9 @@ class AccountService {
   static const String _user = "user";
   final _storage = const FlutterSecureStorage();
 
-  Future<void> saveToken(String token) async {
-    await _storage.write(key: _tokenKey, value: token);
+  Future<String?> readUser() async {
+    final user = await _storage.read(key: _user);
+    return user;
   }
 
   Future<String?> readToken() async {
@@ -14,21 +15,20 @@ class AccountService {
     return token;
   }
 
-  Future<void> deleteToken() async {
-    await _storage.delete(key: _tokenKey);
-  }
-
   Future<void> saveUser(String user) async {
     await _storage.write(key: _user, value: user);
   }
 
-  Future<String?> readUser() async {
-    final user = await _storage.read(key: _user);
-    return user;
+  Future<void> saveToken(String token) async {
+    await _storage.write(key: _tokenKey, value: token);
   }
 
   Future<void> deleteUser() async {
     await _storage.delete(key: _user);
+  }
+
+  Future<void> deleteToken() async {
+    await _storage.delete(key: _tokenKey);
   }
 
   Future<void> logout() async {
